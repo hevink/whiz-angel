@@ -8,12 +8,20 @@ const authRouter = require("./routers/authRouter");
 const contactRouter = require("./routers/contactRouter");
 
 const app = express();
+const allowedOrigins = ["http://localhost:3000", "https://www.whizangel.com"];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow frontend domain
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: "GET,POST,PUT,PATCH,DELETE,OPTIONS",
     allowedHeaders: "Content-Type, Authorization",
-    credentials: true, // Allow cookies and authentication headers
+    credentials: true,
   })
 );
 
@@ -23,7 +31,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 mongoose
-  .connect(process.env.MONGO_URI)
+  .connect(process.env.MONGO_URI, {
+    serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
+    socketTimeoutMS: 45000, // Increase socket timeout to 45 seconds
+  })
   .then(() => {
     console.log("Database connected");
   })
