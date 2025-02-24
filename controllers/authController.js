@@ -129,7 +129,7 @@ exports.signin = async (req, res) => {
 exports.signout = async (req, res) => {
   res
     .clearCookie("Authorization", {
-      sameSite: "none",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production", // Must be true if using HTTPS
       httpOnly: process.env.NODE_ENV === "production",
     })
