@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 
 const authRouter = require("./routers/authRouter");
 const contactRouter = require("./routers/contactRouter");
+const userRouter = require("./routers/userRouter");
 
 const app = express();
 const allowedOrigins = ["http://localhost:3000", "https://www.whizangel.com"];
@@ -44,6 +45,7 @@ mongoose
 
 app.use("/api/auth", authRouter);
 app.use("/api/contact", contactRouter);
+app.use("/api", userRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello from the server" });

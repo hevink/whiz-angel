@@ -336,72 +336,6 @@ exports.sendForgotPasswordCode = async (req, res) => {
   }
 };
 
-// exports.verifyForgotPasswordCode = async (req, res) => {
-//   const { email, providedCode, newPassword } = req.body;
-//   try {
-//     // const { error, value } = acceptFPCodeSchema.validate({
-//     //   email,
-//     //   providedCode,
-//     //   newPassword,
-//     // });
-//     // if (error) {
-//     //   return res
-//     //     .status(401)
-//     //     .json({ success: false, message: error.details[0].message });
-//     // }
-
-//     const codeValue = providedCode.toString();
-//     const existingUser = await User.findOne({ email }).select(
-//       "+forgotPasswordCode +forgotPasswordCodeValidation"
-//     );
-
-//     if (!existingUser) {
-//       return res
-//         .status(401)
-//         .json({ success: false, message: "User does not exists!" });
-//     }
-
-//     if (
-//       !existingUser.forgotPasswordCode ||
-//       !existingUser.forgotPasswordCodeValidation
-//     ) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "something is wrong with the code!" });
-//     }
-
-//     if (
-//       Date.now() - existingUser.forgotPasswordCodeValidation >
-//       5 * 60 * 1000
-//     ) {
-//       return res
-//         .status(400)
-//         .json({ success: false, message: "code has been expired!" });
-//     }
-
-//     const hashedCodeValue = hmacProcess(
-//       codeValue,
-//       process.env.HMAC_VERIFICATION_CODE_SECRET
-//     );
-
-//     if (hashedCodeValue === existingUser.forgotPasswordCode) {
-//       const hashedPassword = await doHash(newPassword, 12);
-//       existingUser.password = hashedPassword;
-//       existingUser.forgotPasswordCode = undefined;
-//       existingUser.forgotPasswordCodeValidation = undefined;
-//       await existingUser.save();
-//       return res
-//         .status(200)
-//         .json({ success: true, message: "Password updated!!" });
-//     }
-//     return res
-//       .status(400)
-//       .json({ success: false, message: "unexpected occured!!" });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
 exports.me = async (req, res) => {
   try {
     const user = await User.findById(req.user.userId);
@@ -412,6 +346,64 @@ exports.me = async (req, res) => {
     }
     res.json({ success: true, user });
   } catch (error) {
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// Update own profile (user route)
+exports.updateProfile = async (req, res) => {
+  const { firstName, lastName } = req.body;
+  const userId = req.user.userId; // Get user ID from auth token
+
+  try {
+    // Check if user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    // Validate input data
+    if (firstName && firstName.length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: "First name must have at least 2 characters",
+      });
+    }
+
+    if (lastName && lastName.length < 2) {
+      return res.status(400).json({
+        success: false,
+        message: "Last name must have at least 2 characters",
+      });
+    }
+
+    // Prepare update data
+    const updateData = {};
+    if (firstName) updateData.firstName = firstName;
+    if (lastName) updateData.lastName = lastName;
+
+    // Update user
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: updateData },
+      { new: true, runValidators: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.log(error);
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        success: false,
+        message: Object.values(error.errors).map((val) => val.message)[0],
+      });
+    }
     res.status(500).json({ success: false, message: "Server error" });
   }
 };

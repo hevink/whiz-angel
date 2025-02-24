@@ -33,4 +33,7 @@ router.patch(
 // Route to get current user details
 router.get("/me", authenticateUser, authController.me);
 
+// Route to update user profile
+router.put("/profile", authenticateUser, authController.updateProfile);
+
 module.exports = router;
