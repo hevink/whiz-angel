@@ -62,6 +62,7 @@ exports.signup = async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
+        domain: ".whizangel.com", // Set cookie for all subdomains
       })
       .status(201)
       .json({
@@ -113,6 +114,7 @@ exports.signin = async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
+        domain: ".whizangel.com", // Set cookie for all subdomains
       })
       .json({
         success: true,
