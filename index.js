@@ -35,6 +35,8 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.set("trust proxy", 1);
+
 mongoose
   .connect(process.env.MONGO_URI, {
     serverSelectionTimeoutMS: 30000, // Increase timeout to 30 seconds
