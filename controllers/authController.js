@@ -62,7 +62,7 @@ exports.signup = async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        // sameSite: "none",
       })
       .status(201)
       .json({
@@ -114,7 +114,7 @@ exports.signin = async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
-        sameSite: "none",
+        // sameSite: "none",
       })
       .json({
         success: true,
@@ -128,9 +128,13 @@ exports.signin = async (req, res) => {
 
 exports.signout = async (req, res) => {
   res
-    .clearCookie("Authorization")
+    .clearCookie("Authorization", {
+      sameSite: "none",
+      secure: process.env.NODE_ENV === "production", // Must be true if using HTTPS
+      httpOnly: process.env.NODE_ENV === "production",
+    })
     .status(200)
-    .json({ success: true, message: "logged out successfully" });
+    .json({ success: true, message: "Logged out successfully" });
 };
 
 exports.sendVerificationCode = async (req, res) => {
