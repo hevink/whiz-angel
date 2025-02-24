@@ -63,7 +63,7 @@ exports.signup = async (req, res) => {
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
         // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        // sameSite: "none",
+        sameSite: "none",
       })
       .status(201)
       .json({
@@ -116,7 +116,7 @@ exports.signin = async (req, res) => {
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
         // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        // sameSite: "none",
+        sameSite: "none",
       })
       .json({
         success: true,
