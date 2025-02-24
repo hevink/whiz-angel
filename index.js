@@ -12,7 +12,6 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:3000",
   "https://www.whizangel.com",
-  "https://d841-110-226-124-215.ngrok-free.app",
 ];
 
 app.use(
