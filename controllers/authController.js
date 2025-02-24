@@ -56,18 +56,12 @@ exports.signup = async (req, res) => {
       { expiresIn: "30d" }
     );
 
-    // Updated cookie configuration
+    // Set token as an HTTP-only cookie
     res
-      .cookie("Authorization", `Bearer ${token}`, {
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
-        httpOnly: true, // Always set httpOnly for security
-        secure: process.env.NODE_ENV === "production", // Only use HTTPS in production
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        domain:
-          process.env.NODE_ENV === "production"
-            ? ".whizangel.com"
-            : "localhost",
-        path: "/",
+      .cookie("Authorization", "Bearer " + token, {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
+        httpOnly: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production",
       })
       .status(201)
       .json({
@@ -111,21 +105,14 @@ exports.signin = async (req, res) => {
         verified: existingUser.verified,
       },
       process.env.TOKEN_SECRET,
-      { expiresIn: "30d" }
+      { expiresIn: "30d" } // Token will be valid for 30 days
     );
 
-    // Updated cookie configuration
     res
-      .cookie("Authorization", `Bearer ${token}`, {
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
-        httpOnly: true, // Always set httpOnly for security
-        secure: process.env.NODE_ENV === "production", // Only use HTTPS in production
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-        domain:
-          process.env.NODE_ENV === "production"
-            ? ".whizangel.com"
-            : "localhost",
-        path: "/",
+      .cookie("Authorization", "Bearer " + token, {
+        expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
+        httpOnly: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production",
       })
       .json({
         success: true,
@@ -134,7 +121,6 @@ exports.signin = async (req, res) => {
       });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Something went wrong" });
   }
 };
 
