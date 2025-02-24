@@ -2,6 +2,8 @@ const jwt = require("jsonwebtoken");
 
 // Middleware to verify token
 const authenticateUser = async (req, res, next) => {
+  console.log(req.cookies);
+
   const token = req.cookies.Authorization?.split(" ")[1];
 
   console.log(token, process.env.TOKEN_SECRET);
