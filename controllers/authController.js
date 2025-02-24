@@ -62,7 +62,8 @@ exports.signup = async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        sameSite: "none",
       })
       .status(201)
       .json({
@@ -114,7 +115,8 @@ exports.signin = async (req, res) => {
         expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // Cookie expires in 30 days
         httpOnly: process.env.NODE_ENV === "production",
         secure: process.env.NODE_ENV === "production",
-        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        sameSite: "none",
       })
       .json({
         success: true,
@@ -129,7 +131,8 @@ exports.signin = async (req, res) => {
 exports.signout = async (req, res) => {
   res
     .clearCookie("Authorization", {
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      sameSite: "none",
+      // sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       secure: process.env.NODE_ENV === "production", // Must be true if using HTTPS
       httpOnly: process.env.NODE_ENV === "production",
     })
