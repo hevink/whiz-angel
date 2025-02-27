@@ -1,6 +1,5 @@
 const User = require("../models/usersModel");
 
-
 // Get all users
 exports.getAllUsers = async (req, res) => {
   try {
@@ -182,5 +181,42 @@ exports.adminUpdateUser = async (req, res) => {
       });
     }
     res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+// Update User Controller
+exports.updateUserDetails = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updateData = req.body;
+
+    // Find the user by ID and update the fields
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          // email: updateData.email,
+          // firstName: updateData.firstName,
+          // lastName: updateData.lastName,
+          companyName: updateData.companyName,
+          contactName: updateData.contactName,
+          title: updateData.title,
+          division: updateData.division,
+          phoneNumber: updateData.phoneNumber,
+          companyWebsite: updateData.companyWebsite,
+          howDidYouHear: updateData.howDidYouHear,
+        },
+      },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ success: 200, updatedUser });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };

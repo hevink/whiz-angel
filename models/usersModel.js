@@ -48,6 +48,83 @@ const userSchema = mongoose.Schema(
       type: Number,
       select: false,
     },
+    // Company Registration Fields
+    companyName: {
+      type: String,
+      trim: true,
+    },
+    contactName: {
+      type: String,
+      trim: true,
+    },
+    title: {
+      type: String,
+      trim: true,
+    },
+    division: {
+      type: String,
+      trim: true,
+    },
+    phoneNumber: {
+      type: String,
+      trim: true,
+    },
+    companyWebsite: {
+      type: String,
+      trim: true,
+    },
+    howDidYouHear: {
+      type: String,
+      trim: true,
+    },
+    // Payment details
+    stripeSessionId: {
+      type: String,
+      trim: true,
+    },
+    sunscriptionPlan: {
+      type: String,
+      trim: true,
+    },
+    lastPaymentDate: {
+      type: String,
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["paid", "unpaid", "pending"],
+      default: "unpaid",
+    },
+    amountTotal: {
+      type: Number,
+      min: [0, "Amount must be non-negative"],
+    },
+    currency: {
+      type: String,
+      trim: true,
+    },
+    paymentIntentId: {
+      type: String,
+      trim: true,
+    },
+    paymentMethodTypes: {
+      type: [String],
+      default: [],
+    },
+    paymentDate: {
+      type: String,
+    },
+    lineItems: [
+      {
+        id: { type: String, trim: true },
+        description: { type: String, trim: true },
+        amountTotal: { type: Number, min: [0, "Amount must be non-negative"] },
+        quantity: { type: Number },
+        currency: { type: String, trim: true },
+      },
+    ],
+    paymentData: {
+      type: mongoose.Schema.Types.Mixed,
+    },
   },
   {
     timestamps: true,

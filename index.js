@@ -8,6 +8,7 @@ const authRouter = require("./routers/authRouter");
 const contactRouter = require("./routers/contactRouter");
 const userRouter = require("./routers/userRouter");
 const adminRouter = require("./routers/adminRouter");
+const stripeRouter = require("./routers/stripeRouter");
 
 const app = express();
 const allowedOrigins = ["http://localhost:3000", "https://www.whizangel.com"];
@@ -50,6 +51,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api", userRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/stripe", stripeRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Hello from the server" });

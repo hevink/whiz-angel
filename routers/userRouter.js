@@ -14,5 +14,6 @@ router.put(
   authenticateUser,
   usersController.adminUpdateUser
 );
+router.put("/users/update-user/:id", usersController.updateUserDetails);
 
 module.exports = router;
