@@ -82,7 +82,7 @@ const userSchema = mongoose.Schema(
       type: String,
       trim: true,
     },
-    sunscriptionPlan: {
+    subscriptionPlan: {
       type: String,
       trim: true,
     },

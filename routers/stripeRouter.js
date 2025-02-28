@@ -48,7 +48,7 @@ router.get("/complete-payment", async (req, res) => {
         $set: {
           subscriptionStatus: "active",
           lastPaymentDate: new Date(session.payment_intent.created * 1000),
-          sunscriptionPlan: lineItems.data[0].description,
+          subscriptionPlan: lineItems.data[0].description,
           stripeSessionId: session.id,
           paymentStatus: session.payment_status,
           amountTotal: session.amount_total,
