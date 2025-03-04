@@ -189,8 +189,6 @@ exports.updateUserDetails = async (req, res) => {
   try {
     const userId = req.params.id;
     const updateData = req.body;
-
-    console.log("Update Data: ", updateData);
     
     // Find the user by ID and update the fields
     const updatedUser = await User.findByIdAndUpdate(
@@ -207,6 +205,7 @@ exports.updateUserDetails = async (req, res) => {
           phoneNumber: updateData.phoneNumber,
           companyWebsite: updateData.companyWebsite,
           howDidYouHear: updateData.howDidYouHear,
+          referral: updateData.referralDetails,
         },
       },
       { new: true } // Return the updated document

@@ -125,6 +125,10 @@ const userSchema = mongoose.Schema(
     paymentData: {
       type: mongoose.Schema.Types.Mixed,
     },
+    referral: {
+      type: String,
+      trim: true,
+    },
   },
   {
     timestamps: true,
