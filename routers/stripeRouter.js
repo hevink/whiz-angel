@@ -165,6 +165,35 @@ router.post("/create-guest-user", async (req, res) => {
     req.body;
 
   try {
+    let existingUser = await User.findOne({ email: emailAddress });
+
+    if (existingUser) {
+      // If the user exists, generate a JWT token for them
+      const token = jwt.sign(
+        {
+          userId: existingUser._id,
+          email: existingUser.email,
+          verified: existingUser.verified,
+        },
+        process.env.TOKEN_SECRET,
+        { expiresIn: "30d" }
+      );
+
+      return res
+        .cookie("Authorization", "Bearer " + token, {
+          expires: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          httpOnly: process.env.NODE_ENV === "production",
+          secure: process.env.NODE_ENV === "production",
+          sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        })
+        .status(200)
+        .json({
+          success: true,
+          message: "User already exists, logged in successfully",
+          token,
+        });
+    }
+
     const password = generateRandomPassword();
 
     const hashedPassword = await doHash(password, 12);
@@ -209,4 +238,5 @@ router.post("/create-guest-user", async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 });
+
 module.exports = router; // Ensure router is properly exported
