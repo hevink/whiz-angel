@@ -190,14 +190,16 @@ exports.updateUserDetails = async (req, res) => {
     const userId = req.params.id;
     const updateData = req.body;
 
+    console.log("Update Data: ", updateData);
+    
     // Find the user by ID and update the fields
     const updatedUser = await User.findByIdAndUpdate(
       userId,
       {
         $set: {
           // email: updateData.email,
-          // firstName: updateData.firstName,
-          // lastName: updateData.lastName,
+          firstName: updateData.firstName,
+          lastName: updateData.lastName,
           companyName: updateData.companyName,
           contactName: updateData.contactName,
           title: updateData.title,
