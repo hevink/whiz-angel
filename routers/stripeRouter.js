@@ -5,7 +5,12 @@ const transport = require("../middlewares/sendMail");
 const jwt = require("jsonwebtoken");
 const { doHash } = require("../utils/hashing");
 
-const stripe = require("stripe")("sk_test_51Qr19lBztIFgkpIn5hO8mSwp1rnfTlS0zpwOplYO8qIOvv90aVNJmEO9Mr4q3hybWrVwL9yRd8vVpQc7CKffZ9Xc002DAPsnwN");
+if (!process.env.STRIPE_SECRET_KEY) {
+  console.error("Please provide your Stripe secret key");
+  process.exit(1);
+}
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 router.post("/create-checkout-session", async (req, res) => {
   const { quantity, price, plan } = req.body;
