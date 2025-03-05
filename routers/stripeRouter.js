@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const User = require("../models/usersModel");
 const transport = require("../middlewares/sendMail");
 const jwt = require("jsonwebtoken");
 const { doHash } = require("../utils/hashing");
+
+const stripe = require("stripe")("sk_test_51Qr19lBztIFgkpIn5hO8mSwp1rnfTlS0zpwOplYO8qIOvv90aVNJmEO9Mr4q3hybWrVwL9yRd8vVpQc7CKffZ9Xc002DAPsnwN");
 
 router.post("/create-checkout-session", async (req, res) => {
   const { quantity, price, plan } = req.body;
@@ -28,6 +29,9 @@ router.post("/create-checkout-session", async (req, res) => {
       success_url: `${process.env.FRONTEND_URL}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.FRONTEND_URL}/order-confirmation?session_id={CHECKOUT_SESSION_ID}`,
     });
+
+    console.log(session.id);
+    
     res.status(200).json({ id: session.id });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -36,8 +40,6 @@ router.post("/create-checkout-session", async (req, res) => {
 
 router.get("/complete-payment", async (req, res) => {
   const { sessionId, userId } = req.query;
-
-  console.log("Session ID: ", sessionId);
 
   try {
     const [session, lineItems] = await Promise.all([
